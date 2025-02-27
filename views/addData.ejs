@@ -1,0 +1,121 @@
+<%- layout('./layouts/boilerPlate.ejs') %>
+
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+
+    <!-- Success Message -->
+    <% if (success) { %>
+        <div id="successMessage" 
+             class="fixed top-5 right-5 bg-green-500 text-white p-3 rounded shadow-lg transition-all transform opacity-0 animate-slideIn">
+            <%= success %>
+        </div>
+    <% } %>
+
+    <!-- Error Message -->
+    <% if (error) { %>
+        <div id="errorMessage" 
+             class="fixed top-5 right-5 bg-red-500 text-white p-3 rounded shadow-lg transition-all transform opacity-0 animate-slideIn">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-xl font-semibold text-center mb-4">Student Information Form</h2>
+        <form id="studentForm" action="/submit" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <input type="text" name="name" placeholder="Enter Name" required class="w-full p-2 border rounded">
+            <input type="text" name="enrollmentNo" placeholder="Enrollment No." required class="w-full p-2 border rounded">
+            <input type="text" name="branch" placeholder="Branch" required class="w-full p-2 border rounded">
+
+            <div class="flex flex-col items-center">
+                <video id="video" class="w-64 h-48 border rounded" autoplay></video>
+                <button type="button" id="capture" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Capture Image</button>
+            </div>
+            
+            <canvas id="canvas" width="320" height="240" class="hidden"></canvas>
+            
+            <input type="file" id="fileInput" name="image" accept="image/*" required class="w-full p-2 border rounded">
+            <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Function to handle flash messages
+    function handleFlashMessage(id) {
+        const flashMessage = document.getElementById(id);
+        if (flashMessage) {
+            flashMessage.classList.remove("opacity-0");
+
+            // Hide after 10 seconds
+            setTimeout(() => {
+                flashMessage.classList.add("opacity-0", "translate-x-10");
+            }, 9000); // Start fade-out at 9 sec
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+                flashMessage.remove();
+            }, 10000);
+        }
+    }
+
+    // Apply flash message logic to both success and error messages
+    document.addEventListener("DOMContentLoaded", () => {
+        handleFlashMessage("successMessage");
+        handleFlashMessage("errorMessage");
+    });
+
+    // Camera capture logic
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const fileInput = document.getElementById('fileInput');
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing camera:", err);
+                captureButton.disabled = true;
+                captureButton.textContent = "Camera Not Available";
+                captureButton.classList.add("bg-gray-400", "cursor-not-allowed");
+            });
+    }
+
+    captureButton.addEventListener('click', () => {
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        canvas.toBlob(blob => {
+            const file = new File([blob], "student_photo.jpg", { type: "image/jpeg" });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+        }, "image/jpeg");
+    });
+</script>
+
+<style>
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    input {
+    color: black; /* Sets text color to black */
+    font-size: 16px; /* Ensures text is readable */
+    }
+
+    input::placeholder {
+        color: gray; /* Optional: Keeps placeholder text gray */
+    }
+
+    .animate-slideIn {
+        animation: slideIn 0.5s ease-out forwards;
+    }
+</style>

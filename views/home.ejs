@@ -1,0 +1,76 @@
+<%- layout('./layouts/boilerPlate.ejs') %>
+
+    <div class="" id="wrapper">
+      <% if (success!="") { %>
+        <div id="successMessage" 
+             class="fixed top-5 right-5 bg-green-500 text-white p-3 rounded shadow-lg transition-all transform opacity-0 animate-slideIn">
+            <%= success %>
+        </div>
+    <% } %>
+    <!-- Error Message -->
+    <% if (error!="") { %>
+      <div id="errorMessage" 
+           class="fixed top-5 right-5 bg-red-500 text-white p-3 rounded shadow-lg transition-all transform opacity-0 animate-slideIn">
+          <%= error %>
+      </div>
+  <% } %>
+      <!-- Heading section -->
+      <header class="section__container header__container" id="home">
+        <div class="header__image" >
+          <img src="./images/data.svg" alt="header" />
+        </div>
+        <div class="header__content" >
+          <div class="headsection">
+            <h1>Student Entry<br />with Live<br />Image Capture</h1>
+          </div>
+          <p class="section__description">
+            Effortless student record management with real-time image capture, secure storage, and a user-friendly interface for seamless data entry and updates.
+          </p>
+          <div class="header__btn">
+            <button class="btn" id="getDemo">Take Demo Now</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- About section  -->
+      <h2 class="section__header1"> About Us</h2>
+      <section class="section__container about__container" id="about">
+        <div class="about__video">
+            <video src="./videos/v1.mp4" autoplay muted loop></video>
+      </div>
+        <div class="about__content">
+          <p class="section__description">
+            Welcome to our dynamic listing platform, where you can seamlessly showcase your entries with detailed information and images. Each listing includes a title, description, user details, and an uploaded image, ensuring that your content is well-organized and visually appealing. Our system ensures an easy and intuitive experience, allowing users to explore and interact with the submitted listings effortlessly.
+          </p>
+        </div>
+
+        <div class="about__content">
+          <p class="section__description2">
+            Our data entry app enables users to submit their listings by capturing images and entering relevant details. When a user uploads an image, it is processed and securely stored in our database, ensuring efficient retrieval and display. Along with the image, user-submitted data such as name, description, and additional details are saved, allowing for a structured and well-managed listing system. The entire process is designed to be smooth, ensuring accurate data storage and seamless integration with the website.
+          </p>
+        </div>
+        <div class="about__video">
+            <video src="./videos/v2.mp4" autoplay muted loop></video>
+      </div>
+      </section>
+
+      <div class="addData">
+        <h1>Feedback</h1>
+        <form action="/send-email" method="post">
+          <input type="email" name="email" id="email" placeholder="Enter Email" required>
+      
+          <textarea name="message" id="message" rows="4" placeholder="Enter Message" required></textarea>
+      
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      
+    
+
+      <footer class="footer">
+        Copyright © 2025. All rights reserved.
+      </footer>
+    </div>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="./js/home.js"></script>
+
